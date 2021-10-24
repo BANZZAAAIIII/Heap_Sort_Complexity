@@ -4,6 +4,7 @@ from typing import List, Callable, Optional
 
 from matplotlib import pyplot as plt
 
+import heapsort
 from heapsort import heap_sort
 
 
@@ -17,7 +18,7 @@ def random_list(
 
 	def inner2(size: int) -> List[int]:
 		r = [random.randrange(r_start, r_end) for _ in range(0, size)]
-		heap_sort(r)
+		sorting(r)
 		return r
 
 	if sorting is None:
@@ -26,12 +27,12 @@ def random_list(
 		return inner2
 
 
-def get_element_list(step: int = 10000, end: int = 500001):
+def get_element_list(step: int = 10000, end: int = 100001):
 	start = step
 	return [_ for _ in range(start, end, step)]
 
 
-def sort_blarg(
+def sorting(
 		sort_sizes: List[int],
 		rand_function: Callable[[int], List[int]],
 		plotting: Optional[str] = None
@@ -39,7 +40,7 @@ def sort_blarg(
 	# Holds all times for n
 	result = [[] for _ in range(0, len(sort_sizes))]
 
-	for _ in range(0, 5):
+	for _ in range(0, 10):
 		for i, n in enumerate(sort_sizes):
 			rand_list = rand_function(n)
 			start = time.perf_counter()
@@ -74,15 +75,19 @@ def main():
 	nrElements = get_element_list()
 
 	random_values = random_list()
-	avg_random = sort_blarg(nrElements, random_values, "Heapsort random values")
+	avg_random = sorting(nrElements, random_values, "Heapsort random values")
 
-	random_values = random_list(sorting=heap_sort)
-	avg_sorted = sort_blarg(nrElements, random_values, "Heapsort sorted values")
+	random_values_sorted = random_list(sorting=heap_sort)
+	avg_sorted = sorting(nrElements, random_values_sorted, "Heapsort sorted values")
+
+	random_values_rev_sorted = random_list(sorting=heap_sort(sifter=heapsort.siftdown_min))
+	avg_sorted_rev = sorting(nrElements, random_values_rev_sorted, "Heapsort reverse sorted values")
 
 
 	# Plotting
 	plt.plot(nrElements, avg_random, color="red", label='Random')
 	plt.plot(nrElements, avg_sorted, color="blue", label='Sorted')
+	plt.plot(nrElements, avg_sorted_rev, color="green", label='Reverse sorted')
 
 	plt.grid()
 	plt.legend()
