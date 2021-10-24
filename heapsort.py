@@ -57,7 +57,7 @@ def buildHeap(a: List, size: int):
 		siftdown(a, size, i)
 
 
-def head_sort(a: List):
+def heap_sort(a: List):
 	n = len(a)
 	buildHeap(a, n)
 	for i in range(n - 1, 0, -1):
@@ -68,7 +68,7 @@ def head_sort(a: List):
 def main():
 	blarg = [2, 8, 1, 4, 14, 7, 16, 10, 9, 3]
 	print(f"Sorting: {blarg}")
-	head_sort(blarg)
+	heap_sort(blarg)
 	print(f"Sorted: {blarg}")
 
 
