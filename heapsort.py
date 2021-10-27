@@ -48,7 +48,7 @@ def siftdown_min(a: List, length: int, root: int) -> None:
 		siftdown_min(a, length, largest)
 
 
-def siftdownItter(a: List, length: int, root: int) -> None:
+def siftdownItter_max(a: List, length: int, root: int) -> None:
 	"""
 	Heapifying a list in a siftdown manner using recursion. Modifies original list pass to function
 	Args:
@@ -62,9 +62,9 @@ def siftdownItter(a: List, length: int, root: int) -> None:
 		largest = root  # Holds index to largest element
 
 		# Checks if child isn't out of bound, then it its larger
-		if left < length and a[left] > a[largest]:
+		if left < length and a[left] < a[largest]:
 			largest = left
-		if right < length and a[right] > a[largest]:
+		if right < length and a[right] < a[largest]:
 			largest = right
 
 		if largest == root:
@@ -83,7 +83,7 @@ def buildHeap(a: List, size: int, sifter):
 
 def heap_sort(
 		a: Optional[List] = None,
-		sifter: Optional[Callable[[List[int], int, int], None]] = siftdown_max):
+		sifter: Optional[Callable[[List[int], int, int], None]] = siftdownItter_max):
 	"""
 	Heapifying a list in a siftdown manner using recursion. Modifies original list pass to function
 	Args:
