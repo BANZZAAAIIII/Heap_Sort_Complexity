@@ -1,7 +1,7 @@
 # Built in
 import random
 import time
-from math import log2
+from math import log, log2
 from typing import List, Callable, Optional
 
 # Libraries
@@ -13,27 +13,24 @@ from heapsort import heap_sort
 
 
 def random_list(
-		sorting: Optional[Callable[[List[int]], List[int]]] = None,
+		sort: Optional[Callable[[List[int]], List[int]]] = None,
 		r_start: int = 0,
 		r_end: int = 100
 ) -> Callable[[int], List[int]]:
-	def inner1(size: int) -> List[int]:
+	def random_numbers(size: int) -> List[int]:
 		return [random.randrange(r_start, r_end) for _ in range(0, size)]
 
-	def inner2(size: int) -> List[int]:
+	def sorted_numbers(size: int) -> List[int]:
 		r = [random.randrange(r_start, r_end) for _ in range(0, size)]
-		sorting(r)
+		sort(r)
 		return r
 
-	if sorting is None:
-		return inner1
-	else:
-		return inner2
+	return random_numbers if not sort else sorted_numbers
 
 
-def get_element_list(step: int = 1000, end: int = 10000):
+def get_element_list(step: int = 1000, end: int = 10000) -> List[int]:
 	start = step
-	end = end + 1  # Too make the end inclusive
+	end = end + 1  # To make the end inclusive
 	return [_ for _ in range(start, end, step)]
 
 
@@ -44,7 +41,6 @@ def sorting(
 		plotting: Optional[str] = None,
 		in_nano: bool = False
 ) -> List[int]:
-	# Holds all times for n
 	result = [[] for _ in range(0, len(sort_sizes))]
 
 	timer = time.perf_counter_ns if in_nano else time.perf_counter
@@ -84,23 +80,36 @@ def sorting(
 
 
 def main():
-	nrElements = get_element_list(50000,  500000)
+	nrElements = get_element_list(50,  5000)
 	repeats = 5
 	in_ns = False
 
-	random_values = random_list()
-	avg_random = sorting(repeats, nrElements, random_values, "Heapsort random values", in_nano=in_ns)
-	# avg_random = sorting(repeats, nrElements, random_values, in_nano=in_ns)
+	avg_random = sorting(
+		repeats,
+		nrElements,
+		random_list(),
+		# "Heapsort random values",
+		in_nano=in_ns
+	)
 
-	random_values_sorted = random_list(sorting=heap_sort)
-	avg_sorted = sorting(repeats, nrElements, random_values_sorted, "Heapsort sorted values", in_nano=in_ns)
-	# avg_sorted = sorting(repeats, nrElements, random_values_sorted, in_nano=in_ns)
+	avg_sorted = sorting(
+		repeats,
+		nrElements,
+		random_list(sort=heap_sort),
+		# "Heapsort sorted values",
+		in_nano=in_ns
+	)
 
-	random_values_rev_sorted = random_list(sorting=heap_sort(sifter=hs.siftdown_min))
-	avg_sorted_rev = sorting(repeats, nrElements, random_values_rev_sorted, "Heapsort reverse sorted values", in_nano=in_ns)
-	# avg_sorted_rev = sorting(repeats, nrElements, random_values_rev_sorted, in_nano=in_ns)
+	avg_sorted_rev = sorting(
+		repeats,
+		nrElements,
+		random_list(sort=heap_sort(sifter=hs.siftdown_min)),
+		# "Heapsort reverse sorted values",
+		in_nano=in_ns
+	)
 
-	values = [n*log2(n) for n in nrElements]
+
+	values = [n*log(n) for n in nrElements]
 
 	# Plotting
 	_, axes1 = plt.subplots()
@@ -108,7 +117,10 @@ def main():
 	line1 = axes1.plot(nrElements, avg_random, color="salmon", label='Random')
 	line2 = axes1.plot(nrElements, avg_sorted, color="tan", label='Sorted')
 	line3 = axes1.plot(nrElements, avg_sorted_rev, color="lightgreen", label='Reverse sorted')
-	axes1.set_ylabel("Time in nano seconds")
+	if in_ns:
+		axes1.set_ylabel("Time in nano seconds")
+	else:
+		axes1.set_ylabel("Time in seconds")
 
 	axes1.grid()
 

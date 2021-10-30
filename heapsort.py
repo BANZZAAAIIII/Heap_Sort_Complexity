@@ -83,7 +83,7 @@ def buildHeap(a: List, size: int, sifter):
 
 def heap_sort(
 		a: Optional[List] = None,
-		sifter: Optional[Callable[[List[int], int, int], None]] = siftdownItter_max):
+		sifter: Optional[Callable[[List[int], int, int], None]] = siftdown_max):
 	"""
 	Heapifying a list in a siftdown manner using recursion. Modifies original list pass to function
 	Args:
