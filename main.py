@@ -80,9 +80,9 @@ def sorting(
 
 
 def main():
-	nrElements = get_element_list(50,  5000)
-	repeats = 5
-	in_ns = False
+	nrElements = get_element_list(25,  1000)
+	repeats = 25
+	in_ns = True
 
 	avg_random = sorting(
 		repeats,

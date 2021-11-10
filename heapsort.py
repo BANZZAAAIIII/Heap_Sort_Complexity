@@ -96,19 +96,6 @@ def heap_sort(
 		for i in range(n - 1, 0, -1):
 			a[i], a[0] = a[0], a[i]
 			sifter(a, i, 0)
-	if a:
-		return inner(a)
-	else:
-		return inner
 
-
-def main():
-	blarg = [2, 8, 1, 4, 14, 7, 16, 10, 9, 3]
-	print(f"Sorting: {blarg}")
-	heap_sort(blarg)
-	print(f"Sorted: {blarg}")
-
-
-if __name__ == '__main__':
-	main()
+	return inner(a) if a else inner
 
